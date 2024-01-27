@@ -1,0 +1,171 @@
+Example of Tree-of-Thought
+Tree-of-thought prompting uses a similar approach that not only invites the AI to consider a step-by-step process and to think logically but also makes it consider intermediate thoughts, building upon them and exploring branches that may or may not lead somewhere. This exploration maximizes the use of LLM and its capabilities, leading to drastically more useful results.
+
+Tree-of-Thought (ToT) Prompting is an innovative method that expands upon and refines the existing Chain-of-Thought prompting approach. By incorporating ToT Prompting, LLMs can demonstrate enhanced reasoning skills. Moreover, this technique allows these models to correct their mistakes autonomously and continually build upon their knowledge.
+
+Dave Hulbert suggested a few rather convincing prompts that leverage this approach and yield, anedotically, great results. I particularly like how he incorporates the Persona pattern and recommend you approach ToT prompting using his prompts or similar variations you might develop yourself.
+
+Let's analyze the example problem and the recommended prompts.
+
+The question many LLM fail to address is the following. Let's consider the following prompt.
+
+1
+2
+3
+4
+5
+6
+Bob is in the living room.
+He walks to the kitchen, carrying a cup.
+He puts a ball in the cup and carries the cup to the bedroom.
+He turns the cup upside down, then walks to the garden.
+He puts the cup down in the garden, then walks to the garage.
+Where is the ball?
+Copied!
+If you try the GPT 3.5 model, you might get the correct answer simply because Dave's work has become influential, and the authors of the LLM might have improved the model due to his work. Nevertheless, when I tried it, I got:
+
+The ball is in the cup, which is currently in the garden.
+
+This is the wrong answer since the cup went upside down in the bedroom, literally dropping the ball (and metaphorically in the case of the LLM).
+
+Even if GPT-3.5 gets it right for you, try it with other models, and you'll be able to see the AI getting the answer wrong (usually, they will mistakenly reply that the ball is in the garden, in the cup or spout a nonsensical answer.)
+
+Now, let's create a new chat and place the following in the prompt instructions:
+
+1
+Imagine three different experts are answering this question. All experts will write down 1 step of their thinking, then share it with the group. Then all experts will go on to the next step, etc. If any expert realises they\'re wrong at any point then they leave. The question is...
+Copied!
+In the prompt, plug in the same question as before:
+
+1
+2
+3
+4
+5
+6
+Bob is in the living room.
+He walks to the kitchen, carrying a cup.
+He puts a ball in the cup and carries the cup to the bedroom.
+He turns the cup upside down, then walks to the garden.
+He puts the cup down in the garden, then walks to the garage.
+Where is the ball?
+Copied!
+The output I got from GPT 3.5 is as follows:
+
+Expert 1: Based on the information given, the ball is in the bedroom. Bob carried the cup with the ball from the kitchen to the bedroom.
+
+Expert 2: I agree with Expert 1. Bob put the ball in the cup in the kitchen and then carried the cup to the bedroom. So the ball should still be in the cup in the bedroom.
+
+Expert 3: Yes, I also agree. Bob turned the cup upside down in the bedroom, so the ball should still be inside the cup in the bedroom.
+
+Although this isn't entirely accurate (the ball is in the bedroom but not in the cup,) it's closer to the actual solution. Depending on the model you use, the answer will either be better than our previous attempts (though not 100% correct) or flat out perfect (typically, with the latest GPT incarnation).
+
+Even if the reasoning is only sometimes 100% correct, this approach tends to yield accurate results most of the time. Plus, since the reasoning behind the output can be scrutinized, it will be easier to determine whether we obtained the correct result.
+
+Let's try the other two prompts suggested by Hulbert.
+
+Open a new chat and use the same prompt, but this time, use the following for the Prompt Instructions:
+
+1
+Simulate three brilliant, logical experts collaboratively answering a question. Each one verbosely explains their thought process in real-time, considering the prior explanations of others and openly acknowledging mistakes. At each step, whenever possible, each expert refines and builds upon the thoughts of others, acknowledging their contributions. They continue until there is a definitive answer to the question. For clarity, your entire response should be in a markdown table. The question is...
+Copied!
+Did you get the right answer? How did it compare with the previous one?
+
+Finally, let's try the third option:
+
+1
+2
+3
+4
+5
+6
+7
+Identify and behave as three different experts that are appropriate to answering this question.
+All experts will write down the step and their thinking about the step, then share it with the group.
+Then, all experts will go on to the next step, etc.
+At each step all experts will score their peers response between 1 and 5, 1 meaning it is highly unlikely, and 5 meaning it is highly likely.
+If any expert is judged to be wrong at any point then they leave.
+After all experts have provided their analysis, you then analyze all 3 analyses and provide either the consensus solution or your best guess solution.
+The question is...
+Copied!
+I tried this with a GPT4 model I had access to, and I'm pretty impressed with the answer I received, reported below:
+
+Expert 1: Detective
+Thinking: I’ll approach this like I’m solving a mystery. It’s about piecing together evidence and ensuring there are no gaps in the narrative.
+
+Step 1: Bob starts in the living room and walks to the kitchen with a cup. There’s no mention of the ball at this point.
+Thinking: Right now, the cup is empty.
+
+Step 2: In the kitchen, Bob puts a ball in the cup.
+Thinking: The cup now contains the ball.
+
+Step 3: Bob carries the cup with the ball to the bedroom.
+Thinking: Ball is still in the cup.
+
+Step 4: He turns the cup upside down in the bedroom.
+Thinking: Turning the cup upside down implies the ball falls out.
+
+Step 5: He walks to the garden and puts the cup down, then moves to the garage.
+Thinking: The ball wasn’t mentioned in the garden, so the last known location of the ball is in the bedroom.
+
+Detective’s Conclusion: The ball is in the bedroom.
+Score for other experts based on this step: [will be given after their analysis]
+
+Expert 2: Physicist
+Thinking: Let’s use the laws of physics and make some assumptions about the world.
+
+Step 1: Bob moves from the living room to the kitchen with a cup.
+Thinking: Nothing special here, just motion.
+
+Step 2: Ball is put in the cup in the kitchen.
+Thinking: The cup has mass m1, ball has mass m2. Now it’s m1 + m2.
+
+Step 3: Bob carries this combined mass to the bedroom.
+Thinking: Movement of objects but they remain together.
+
+Step 4: Cup turned upside down in the bedroom.
+Thinking: Gravity acts on the ball, and it falls out.
+
+Step 5: Walks to garden, then garage. Cup’s motion is mentioned, but not the ball’s.
+Thinking: There’s no external force mentioned that would make the ball teleport or move to another location. Ball remains where it was last influenced by gravity.
+
+Physicist’s Conclusion: The ball is in the bedroom.
+Score for other experts based on this step: [will be given after their analysis]
+
+Expert 3: Storyteller
+Thinking: Stories are about narrative and flow, and sometimes, about misleading the reader. Let’s see if there’s a twist.
+
+Step 1: Simple setup. Bob moves from living room to kitchen.
+Thinking: Introducing the character and his journey.
+
+Step 2: Ball enters the picture. It’s in the cup.
+Thinking: Key element introduced.
+
+Step 3: Journey continues to the bedroom.
+Thinking: Suspense. Where is this going?
+
+Step 4: Plot twist! Cup is turned upside down.
+Thinking: This is the climax of the story. The ball is dropped.
+
+Step 5: Bob goes to the garden and then garage. No mention of the ball.
+Thinking: Deliberate omission to make reader think.
+
+Storyteller's Conclusion:
+
+The ball is in the bedroom.
+Score for other experts based on this step: [will be given after their analysis]
+
+Scores: (Given by each expert based on the final conclusion)
+Detective: Physicist (5), Storyteller (5)
+Physicist: Detective (5), Storyteller (5)
+Storyteller: Detective (5), Physicist (5)
+
+ChatGPT's Analysis:
+
+All three experts independently arrived at the conclusion that the ball is in the bedroom. Their methodologies varied but the consensus is clear.
+
+Consensus Solution:
+
+The ball is in the bedroom.
+
+Older models will not perform as well and sadly still get the answer wrong occasionally (so don't fret if you get the wrong answer). The approach to prompting still gives you your best chance at getting a proper response, even if this isn't an exact science that will get it right 100% of the time.
