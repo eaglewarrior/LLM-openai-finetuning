@@ -24,3 +24,5 @@ Notes on Prompting :
 
 # CO-STAR prompt
 ![image](https://github.com/eaglewarrior/LLM-openai-finetuning/assets/18038147/825c3ab1-e2de-4939-8230-472d0728a61e)
+
+https://www.linkedin.com/pulse/9-frameworks-master-chatgpt-prompt-engineering-edi-hezri-hairi/
