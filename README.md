@@ -21,3 +21,6 @@ Notes on Prompting :
   And:
   
   Let's work this out in a step by step way to be sure we have the right answer.
+
+
+![image](https://github.com/eaglewarrior/LLM-openai-finetuning/assets/18038147/825c3ab1-e2de-4939-8230-472d0728a61e)
